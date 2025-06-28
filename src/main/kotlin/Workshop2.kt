@@ -24,7 +24,7 @@ fun main() {
     )
 
     println("รายการสินค้าทั้งหมด:")
-   products.forEach { println(it) }
+    products.forEach { println(it) }
     println("--------------------------------------------------")
 
 
@@ -37,10 +37,10 @@ fun main() {
     // ดึงเฉพาะราคาออกมาเป็น List<Double>
     // หาผลรวมของราคา
     val totalElecPriceOver500 = products
-          .filter { it.category == "Electronics" }
-          .filter { it.price > 500.0 }
-          .map { it.price }
-          .sum()
+        .filter { it.category == "Electronics" }
+        .filter { it.price > 500.0 }
+        .map { it.price }
+        .sum()
 
     println("วิธีที่ 1: ใช้ Chaining กับ List")
     println("ผลรวมราคาสินค้า Electronics ที่ราคา > 500 บาท: $totalElecPriceOver500 บาท")
@@ -58,7 +58,23 @@ fun main() {
 
 
     println("วิธีที่ 2: ใช้ .asSequence() (ขั้นสูง)")
-   println("ผลรวมราคาสินค้า Electronics ที่ราคา > 500 บาท: $totalElecPriceOver500Sequence บาท")
+    println("ผลรวมราคาสินค้า Electronics ที่ราคา > 500 บาท: $totalElecPriceOver500Sequence บาท")
+    println("--------------------------------------------------")
+
+    println("กลุ่มสินค้าตาม range ราคา: ")
+    val groupedByPriceRange = products.groupBy { product ->
+        when {
+            product.price <= 1000 -> "ไม่เกิน 1,000 บาท"
+            product.price in 1000.0..9999.99 -> "1,000 - 9,999 บาท"
+            else -> "10,000 บาทขึ้นไป"
+        }
+    }
+
+    println("แบ่งกลุ่มสินค้าตามช่วงราคา:")
+    groupedByPriceRange.forEach { (range, group) ->
+        println("▶ กลุ่ม: $range")
+        group.forEach { println("  - ${it.name} (${it.price} บาท)") }
+    }
     println("--------------------------------------------------")
 
 
@@ -75,4 +91,5 @@ fun main() {
     println("   - เช่น: 'Laptop' จะถูก filter category -> filter price -> map price จากนั้น 'Smartphone' ถึงจะเริ่มทำกระบวนการเดียวกัน")
     println("   - จะไม่มีการสร้าง Collection กลางทาง ทำให้ประหยัดหน่วยความจำและเร็วกว่ามากสำหรับชุดข้อมูลขนาดใหญ่ เพราะทำงานกับข้อมูลทีละชิ้นและทำทุกขั้นตอนให้เสร็จในรอบเดียว")
     println("   - การคำนวณจะเกิดขึ้นเมื่อมี 'Terminal Operation' มาเรียกใช้เท่านั้น (ในที่นี้คือ .sum())")
+
 }
